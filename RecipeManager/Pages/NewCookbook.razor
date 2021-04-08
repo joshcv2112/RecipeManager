@@ -1,7 +1,34 @@
 ﻿@page "/cookbook/new"
 
-<h3>New Cookbook</h3>
+<h2>New Cookbook</h2>
 
-@code {
+@*<EditForm Model=@cookbook OnSubmit=@FormSubmitted>
+    <label>Cookbook Title: </label>
+    <input type="text" />
+    <br />
+    <label>Image URL: </label>
+    <input type="text" />
+    <label> Or </label>
+    <input type="button" value="Upload Image" class="btn btn-primary" />
+    <br />
+    <input type="submit" value="Submit" class="btn btn-primary" />
+</EditForm>
 
-}
+<hr />
+
+<h3>Status: @Status</h3>
+
+@code
+{
+    string Status = "Not submitted";
+
+    string title = "";
+
+    Cookbook cookbook = new Cookbook();
+    
+    void FormSubmitted()
+    {
+        Status = "Form submitted";
+        // Post data to the server, etc
+    }
+}*@
