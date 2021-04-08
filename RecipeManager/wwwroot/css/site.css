@@ -48,6 +48,8 @@ a, .btn-link {
         right: 0.75rem;
         top: 0.5rem;
     }
+
+
 .button {
     background-color: #4CAF50;
     border: none;
@@ -59,4 +61,9 @@ a, .btn-link {
     font-size: 16px;
     margin: 4px 2px;
     cursor: pointer;
+}
+
+.cookbook-thumbnail {
+    max-height: 300px;
+    align-content: center;
 }
