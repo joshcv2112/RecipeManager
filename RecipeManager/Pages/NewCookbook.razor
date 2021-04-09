@@ -30,22 +30,11 @@
 
 @code
 {
-    // TODO: Move this to own class, IDK why I was having trouble getting it to work.
-    public class Cookbook
-    {
-        [Required]
-        public string CookbookTitle { get; set; }
-        [Required]
-        [StringLength(500, ErrorMessage = "Description exceeded max length")]
-        public string Description { get; set; }
-        public string ImageUrl { get; set; }
-    }
-
-    private Cookbook cookbook = new Cookbook();
+    private CookbookItem cookbook = new CookbookItem();
 
     private async Task SubmitJobApplication()
     {
         await JSRuntime.InvokeVoidAsync("console.log", JsonSerializer.Serialize(cookbook));
-        // Do stuff with data here instead of logging..
+        // Here is where data will be sent off to the api...
     }
 }
