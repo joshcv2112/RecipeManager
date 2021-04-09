@@ -1,34 +1,51 @@
 ﻿@page "/cookbook/new"
+@using RecipeManager.Data
+@using System.Text.Json
+@using System.ComponentModel.DataAnnotations;
+@inject IJSRuntime JSRuntime;
 
-<h2>New Cookbook</h2>
+<h3>New Cookbook</h3>
 
-@*<EditForm Model=@cookbook OnSubmit=@FormSubmitted>
-    <label>Cookbook Title: </label>
-    <input type="text" />
-    <br />
-    <label>Image URL: </label>
-    <input type="text" />
-    <label> Or </label>
-    <input type="button" value="Upload Image" class="btn btn-primary" />
-    <br />
-    <input type="submit" value="Submit" class="btn btn-primary" />
+<EditForm Model="@cookbook" OnValidSubmit="@SubmitJobApplication">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <p>
+        <label for="fullname">Fullname: </label>
+        <InputText id="fullname" @bind-Value="cookbook.CookbookTitle" />
+    </p>
+    <p>
+        <label for="description">Description: </label>
+        <InputTextArea id="description" @bind-Value="cookbook.Description" />
+    </p>
+    <p>
+        <label for="image">Image: </label>
+        <InputText id="image" @bind-Value="cookbook.ImageUrl" />
+    </p>
+    <button type="submit">Submit</button>
 </EditForm>
 
-<hr />
-
-<h3>Status: @Status</h3>
+<div>
+    <span id="resultJson"></span>
+</div>
 
 @code
 {
-    string Status = "Not submitted";
-
-    string title = "";
-
-    Cookbook cookbook = new Cookbook();
-    
-    void FormSubmitted()
+    // TODO: Move this to own class, IDK why I was having trouble getting it to work.
+    public class Cookbook
     {
-        Status = "Form submitted";
-        // Post data to the server, etc
+        [Required]
+        public string CookbookTitle { get; set; }
+        [Required]
+        [StringLength(500, ErrorMessage = "Description exceeded max length")]
+        public string Description { get; set; }
+        public string ImageUrl { get; set; }
     }
-}*@
+
+    private Cookbook cookbook = new Cookbook();
+
+    private async Task SubmitJobApplication()
+    {
+        await JSRuntime.InvokeVoidAsync("console.log", JsonSerializer.Serialize(cookbook));
+        // Do stuff with data here instead of logging..
+    }
+}
