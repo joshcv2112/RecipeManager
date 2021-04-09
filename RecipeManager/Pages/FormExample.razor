@@ -1,0 +1,35 @@
+﻿@page "/example"
+@using RecipeManager.Data
+@using System.Text.Json
+@inject IJSRuntime JSRuntime;
+
+@*Following this tutorial exmaple: https://www.youtube.com/watch?v=zfqQ_fhmPOQ&t=333s*@
+
+<h3>Form and Validation Example</h3>
+
+<EditForm Model="@jobApplication" OnValidSubmit="@SubmitJobApplication">
+    <p>
+        <label for="fullname">Fullname: </label>
+        <InputText id="fullname" @bind-Value="jobApplication.FullName" />
+    </p>
+
+    <button type="submit">Submit</button>
+</EditForm>
+
+<div>
+    <h3>@jobApplication.FullName</h3>
+</div>
+
+<div>
+    <span id="resultJson"></span>
+</div>
+
+@code
+{
+    private JobApplication jobApplication = new JobApplication();
+
+    private async Task SubmitJobApplication()
+    {
+        await JSRuntime.InvokeVoidAsync("console.log", JsonSerializer.Serialize(jobApplication));
+    }
+}
