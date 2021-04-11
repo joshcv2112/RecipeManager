@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using RecipeApi.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace RecipeApi.Models
 {
@@ -35,6 +36,11 @@ namespace RecipeApi.Models
 
 
         public async Task<T> SelectById<T>(long id) where T : class
+        {
+            return await this.dbContext.Set<T>().FindAsync(id);
+        }
+
+        public async Task<T> SelectById<T>(Guid id) where T : class
         {
             return await this.dbContext.Set<T>().FindAsync(id);
         }

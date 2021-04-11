@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RecipeApi.Models;
 
 namespace RecipeApi.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20210411193050_create_table_cookbook")]
+    partial class create_table_cookbook
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,23 +36,13 @@ namespace RecipeApi.Migrations
                     b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(500)");
 
-                    b.Property<byte>("IsActive")
-                        .HasColumnType("tinyint");
-
                     b.Property<DateTime>("ModifiedOn")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Name")
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)");
-
                     b.HasKey("CookbookId");
-
-                    b.HasIndex("CookbookId")
-                        .IsUnique();
 
                     b.ToTable("cookbooks");
                 });
