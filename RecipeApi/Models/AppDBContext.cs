@@ -12,6 +12,7 @@ namespace RecipeApi.Models
         }
 
         public DbSet<member> members { get; set; }
+        public DbSet<Cookbook> cookbooks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
