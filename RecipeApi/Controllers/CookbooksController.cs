@@ -59,6 +59,7 @@ namespace RecipeApi.Controllers
             var currentTime = DateTime.Now;
             model.CreatedOn = currentTime;
             model.ModifiedOn = currentTime;
+            model.IsActive = true;
             await _repository.CreateAsync<Cookbook>(model);
             return CreatedAtAction("GetCookbook", new { cookbookId = model.CookbookId }, model);
         }
