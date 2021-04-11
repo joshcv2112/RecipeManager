@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RecipeApi.Models
 {
+    [Index(nameof(CookbookId), IsUnique = true)]
     public class Cookbook
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

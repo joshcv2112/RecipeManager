@@ -16,6 +16,10 @@ namespace RecipeApi.Models
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Cookbook>()
+            .HasIndex(p => new { p.CookbookId })
+            .IsUnique(true);
+
             base.OnModelCreating(modelBuilder);
         }
 

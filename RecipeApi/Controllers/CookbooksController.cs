@@ -27,7 +27,7 @@ namespace RecipeApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Cookbook>> GetCookbook(long id)
+        public async Task<ActionResult<Cookbook>> GetCookbook(Guid id)
         {
             var model = await _repository.SelectById<Cookbook>(id);
 
@@ -55,6 +55,10 @@ namespace RecipeApi.Controllers
         [HttpPost]
         public async Task<ActionResult<Cookbook>> InsertCookbook(Cookbook model)
         {
+            model.CookbookId = Guid.NewGuid();
+            var currentTime = DateTime.Now;
+            model.CreatedOn = currentTime;
+            model.ModifiedOn = currentTime;
             await _repository.CreateAsync<Cookbook>(model);
             return CreatedAtAction("GetCookbook", new { cookbookId = model.CookbookId }, model);
         }
