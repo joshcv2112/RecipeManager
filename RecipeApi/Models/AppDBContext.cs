@@ -1,6 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
-using RecipeApi.Models;
+﻿using Microsoft.EntityFrameworkCore;
+
 namespace RecipeApi.Models
 {
     public class AppDBContext : DbContext
@@ -11,7 +10,6 @@ namespace RecipeApi.Models
             _options = options;
         }
 
-        public DbSet<member> members { get; set; }
         public DbSet<Cookbook> cookbooks { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
