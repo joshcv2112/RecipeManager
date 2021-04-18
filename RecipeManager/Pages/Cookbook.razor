@@ -7,37 +7,33 @@
 
 <h1>Cookbooks</h1>
 
-<p>This is where a user will be able to create, read, update, and delete cookbooks.</p>
-
-
-
 <div class="container-fluid">
-    <div class="row justify-content-center" style="margin-bottom:50px">
-        <h3 class="text-center">Calling REST-APIs</h3>
-    </div>
-    <div class="row" style="margin:25px;">
-        <strong>Get Operation </strong><hr />
+    <div>
         @if (Cookbooks != null)
         {
-            <table class="table table-bordered table-striped">
-                <thead class="thead-dark">
+            <table class="table">
+                <thead>
                     <tr>
-                        <th>Id</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        @*<th>Avatar</th>*@
+                        <th></th>
+                        <th>Cookbook</th>
+                        <th>Owner</th>
+                        <th>Description</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var user in Cookbooks)
                     {
                         <tr class="justify-content-center">
-                            <td>@user.CookbookId</td>
+                            <td><img src="@user.ImageUrl" class="cookbook-thumbnail" /></td>
                             <td>@user.Name</td>
+                            <td>@user.UserId</td>
                             <td>@user.Description</td>
-                            <td>@user.ImageUrl</td>
-                            @*<td><img src="@user.AvatarURI" height="30" width="30" /></td>*@
+                            <td>
+                                <a href="">Edit</a> |
+                                <a href="">Copy</a> |
+                                <a href="">Delete</a>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -50,15 +46,18 @@
             </div>
         }
     </div>
-    <div class="row" style="margin:10px;margin-bottom:50px;">
-        <div class="col"><button class="btn btn-info" @onclick="GetUser">Get Cookbooks</button></div>
-    </div>
 </div>
 
 
 @code {
     List<CookbookModel> Cookbooks = new List<CookbookModel>();
-    private async void GetUser()
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUser();
+    }
+
+    private async Task GetUser()
     {
         var apiName = "api/Cookbooks";
         var httpResponse = await client.GetAsync(apiName);
@@ -66,83 +65,7 @@
         {
             List<CookbookModel> responseData = JsonConvert.DeserializeObject<List<CookbookModel>>(await httpResponse.Content.ReadAsStringAsync());
             Cookbooks = responseData;
-            Console.WriteLine(responseData.ToString());
             StateHasChanged();
-        }
-    }
-
-    List<CRUDUser> CRUDUsers = new List<CRUDUser>();
-    CRUDUser crudUser = new CRUDUser();
-    bool ShowCreateUserForm = true;
-    private void ShowHideCreateUserForm()
-    {
-        ShowCreateUserForm = !ShowCreateUserForm;
-    }
-    private async Task CreateNewUser()
-    {
-        string apiName = "api/users";
-        var postData = JsonConvert.SerializeObject(crudUser);
-        var response = await client.PostAsync(apiName, new StringContent(postData));
-        if (response.IsSuccessStatusCode)
-        {
-            var content = await response.Content.ReadAsStringAsync();
-            CRUDUser user = JsonConvert.DeserializeObject<CRUDUser>(await response.Content.ReadAsStringAsync());
-            if (user != null)
-            {
-                user.Name = crudUser.Name;
-                user.Job = crudUser.Job;
-                CRUDUsers.Add(user);
-                crudUser = new CRUDUser();
-            }
-        }
-    }
-    CRUDUser selectedUser = new CRUDUser();
-    bool ShowUpdateUserForm = true;
-    private void ShowHideUpdateUserForm()
-    {
-        ShowUpdateUserForm = !ShowUpdateUserForm;
-    }
-    void UpdateSelectedUser(ChangeEventArgs e)
-    {
-        int id = int.Parse(e.Value.ToString());
-        selectedUser = CRUDUsers.FirstOrDefault(u => u.Id == id);
-    }
-    private async Task UpdateUser()
-    {
-        string apiName = string.Format($"api/users/{selectedUser.Id}");
-        var postData = JsonConvert.SerializeObject(selectedUser);
-        var response = await client.PutAsync(apiName, new StringContent(postData));
-        if (response.IsSuccessStatusCode)
-        {
-            var content = await response.Content.ReadAsStringAsync();
-            CRUDUser user = JsonConvert.DeserializeObject<CRUDUser>(await response.Content.ReadAsStringAsync());
-            if (user != null)
-            {
-                user.Id = selectedUser.Id;
-                user.Name = selectedUser.Name;
-                user.Job = selectedUser.Job;
-                user.CreatedTimestamp = selectedUser.CreatedTimestamp;
-                // Remove the old item from the list and replace it with the updated one
-                var temp = CRUDUsers.FirstOrDefault(u => u.Id == selectedUser.Id);
-                CRUDUsers.Remove(temp);
-                CRUDUsers.Add(user);
-            }
-        }
-    }
-    bool ShowUpdateDeleteForm = true;
-    private void ShowHideDeleteUserForm()
-    {
-        ShowUpdateDeleteForm = !ShowUpdateDeleteForm;
-    }
-    private async Task DeleteUser()
-    {
-        string apiName = string.Format($"api/users/{selectedUser.Id}");
-        var response = await client.DeleteAsync(apiName);
-        if (response.IsSuccessStatusCode)
-        {
-            var temp = CRUDUsers.FirstOrDefault(u => u.Id == selectedUser.Id);
-            CRUDUsers.Remove(temp);
-            selectedUser = new CRUDUser();
         }
     }
 }
