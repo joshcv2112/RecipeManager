@@ -17,7 +17,7 @@
     </div>
     <div class="row" style="margin:25px;">
         <strong>Get Operation </strong><hr />
-        @if (Users != null)
+        @if (Cookbooks != null)
         {
             <table class="table table-bordered table-striped">
                 <thead class="thead-dark">
@@ -26,24 +26,24 @@
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
-                        <th>Avatar</th>
+                        @*<th>Avatar</th>*@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var user in Users)
+                    @foreach (var user in Cookbooks)
                     {
                         <tr class="justify-content-center">
-                            <td>@user.Id</td>
-                            <td>@user.FirstName</td>
-                            <td>@user.LastName</td>
-                            <td>@user.Email</td>
-                            <td><img src="@user.AvatarURI" height="30" width="30" /></td>
+                            <td>@user.CookbookId</td>
+                            <td>@user.Name</td>
+                            <td>@user.Description</td>
+                            <td>@user.ImageUrl</td>
+                            @*<td><img src="@user.AvatarURI" height="30" width="30" /></td>*@
                         </tr>
                     }
                 </tbody>
             </table>
         }
-        @if (!Users.Any())
+        @if (!Cookbooks.Any())
         {
             <div class="justify-content-center">
                 <h5>No records to show</h5>
@@ -51,133 +51,26 @@
         }
     </div>
     <div class="row" style="margin:10px;margin-bottom:50px;">
-        <div class="col"><button class="btn btn-info" @onclick="GetUser">Get Users</button></div>
-    </div>
-    <div class="row" style="margin:25px; margin-top:100px;">
-        <strong>Post, Put and Delete Operations Table Data</strong><hr />
-        @if (CRUDUsers != null)
-        {
-            <table class="table table-bordered table-striped">
-                <thead class="thead-dark">
-                    <tr>
-                        <th>Id</th>
-                        <th>Full Name</th>
-                        <th>Job</th>
-                        <th>Created Timestamp</th>
-                        <th>Updated Timestamp</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var user in CRUDUsers)
-                    {
-                        <tr>
-                            <td>@user.Id</td>
-                            <td>@user.Name</td>
-                            <td>@user.Job</td>
-                            <td>@user.CreatedTimestamp</td>
-                            <td>@user.UpdatedTimestamp</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        }
-        @if (!CRUDUsers.Any())
-        {
-            <div class="justify-content-center">
-                <h5>No records to show</h5>
-            </div>
-        }
-    </div>
-    <div class="row" style="margin:10px; margin-top:70px;">
-        <div class="col"><button class="btn btn-success" @onclick="ShowHideCreateUserForm">Show/Hide Create Form</button>   </div>
-        <div class="col"><button class="btn btn-warning" @onclick="ShowHideUpdateUserForm">Show/Hide Update User Form</button></div>
-        <div class="col"><button class="btn btn-danger" @onclick="ShowHideDeleteUserForm">Show/Hide Delete User Form</button></div>
-    </div>
-    <div class="row" hidden="@ShowCreateUserForm" style="border:3px solid black;margin:20px;">
-        <EditForm Model="@crudUser">
-            <div class="row form-inline" style="margin:20px;">
-                <div class="form-group" style="margin:20px;">
-                    <label for="Name" style="margin:10px;">Name</label>
-                    <InputText Id="Name" @bind-Value="@crudUser.Name"></InputText>
-                </div>
-                <div class="form-group" style="margin:20px;">
-                    <label for="Job" style="margin:10px;">Job Description</label>
-                    <InputText Id="Job" @bind-Value="@crudUser.Job"></InputText>
-                </div>
-                <button class="btn btn-success" @onclick="@CreateNewUser">Create</button>
-            </div>
-        </EditForm>
-    </div>
-    <div class="row" hidden="@ShowUpdateUserForm" style="border:3px solid black;margin:20px;">
-        <EditForm Model="@selectedUser">
-            <div class="row form-inline" style="margin:20px;">
-                <div class="form-group" style="margin:20px;">
-                    <label for="UseId" style="margin:10px;">User Id</label>
-                    <select id="UserId" @onchange=@UpdateSelectedUser>
-                        @if (CRUDUsers != null)
-                        {
-                            @foreach (var user in CRUDUsers)
-                            {
-                                <option value="@user.Id">@user.Id</option>
-                            }
-                        }
-                    </select>
-                </div>
-                <div class="form-group" style="margin:20px;">
-                    <label for="Name" style="margin:10px;">Name</label>
-                    <InputText Id="Name" @bind-Value="@selectedUser.Name"></InputText>
-                </div>
-                <div class="form-group" style="margin:20px;">
-                    <label for="Job" style="margin:10px;">Job Description</label>
-                    <InputText Id="Job" @bind-Value="@selectedUser.Job"></InputText>
-                </div>
-                <button class="btn btn-warning" @onclick="@UpdateUser">Update</button>
-            </div>
-        </EditForm>
-    </div>
-    <div class="row" hidden="@ShowUpdateDeleteForm" style="border:3px solid black;margin:20px;">
-        <EditForm Model="@selectedUser">
-            <div class="row form-inline" style="margin:20px;">
-                <div class="form-group" style="margin:20px;">
-                    <label for="UseId" style="margin:10px;">User Id</label>
-                    <select id="UserId" @onchange=@UpdateSelectedUser>
-                        @if (CRUDUsers != null)
-                        {
-                            @foreach (var user in CRUDUsers)
-                            {
-                                <option value="@user.Id">@user.Id</option>
-                            }
-                        }
-                    </select>
-                    <div class="form-group" style="margin:20px;">
-                        <label for="Name" style="margin:10px;">Name</label>
-                        <InputText Id="Name" @bind-Value="@selectedUser.Name"></InputText>
-                    </div>
-                    <div class="form-group" style="margin:20px;">
-                        <label for="Job" style="margin:10px;">Job Description</label>
-                        <InputText Id="Job" @bind-Value="@selectedUser.Job"></InputText>
-                    </div>
-                </div>
-                <button class="btn btn-danger" @onclick="@DeleteUser">Delete</button>
-            </div>
-        </EditForm>
+        <div class="col"><button class="btn btn-info" @onclick="GetUser">Get Cookbooks</button></div>
     </div>
 </div>
 
 
 @code {
-    List<User> Users = new List<User>();
+    List<CookbookModel> Cookbooks = new List<CookbookModel>();
     private async void GetUser()
     {
-        var apiName = "api/users";
+        var apiName = "api/Cookbooks";
         var httpResponse = await client.GetAsync(apiName);
         if (httpResponse.IsSuccessStatusCode)
         {
-            Response responseData = JsonConvert.DeserializeObject<Response>(await httpResponse.Content.ReadAsStringAsync());
-            Users = responseData.Users;
+            List<CookbookModel> responseData = JsonConvert.DeserializeObject<List<CookbookModel>>(await httpResponse.Content.ReadAsStringAsync());
+            Cookbooks = responseData;
+            Console.WriteLine(responseData.ToString());
             StateHasChanged();
         }
     }
+
     List<CRUDUser> CRUDUsers = new List<CRUDUser>();
     CRUDUser crudUser = new CRUDUser();
     bool ShowCreateUserForm = true;

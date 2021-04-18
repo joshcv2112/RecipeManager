@@ -1,10 +1,7 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,10 +9,7 @@ using Microsoft.Extensions.Hosting;
 using RecipeManager.Areas.Identity;
 using RecipeManager.Data;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace RecipeManager
 {
@@ -42,9 +36,13 @@ namespace RecipeManager
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
             services.AddSingleton<WeatherForecastService>();
+            //services.AddScoped<HttpClient>(s =>
+            //{
+            //    return new HttpClient { BaseAddress = new Uri(@"https://reqres.in/") };
+            //});
             services.AddScoped<HttpClient>(s =>
             {
-                return new HttpClient { BaseAddress = new Uri(@"https://reqres.in/") };
+                return new HttpClient { BaseAddress = new Uri(@"https://localhost:5011") };
             });
         }
 

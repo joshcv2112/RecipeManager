@@ -166,7 +166,7 @@
         var httpResponse = await client.GetAsync(apiName);
         if (httpResponse.IsSuccessStatusCode)
         {
-            Response responseData = JsonConvert.DeserializeObject<Response>(await httpResponse.Content.ReadAsStringAsync());
+            DemoResponse responseData = JsonConvert.DeserializeObject<DemoResponse>(await httpResponse.Content.ReadAsStringAsync());
             Users = responseData.Users;
             StateHasChanged();
         }
