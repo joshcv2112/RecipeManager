@@ -1,0 +1,11 @@
+﻿button {
+    margin-bottom: 15px;
+}
+
+tr {
+    vertical-align: middle;
+}
+
+.cookbook-thumbnail {
+    max-height: 250px;    
+}
