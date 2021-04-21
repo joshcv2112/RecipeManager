@@ -26,6 +26,7 @@
                     <InputText Id="ImageUrl" @bind-Value="@cookbookModel.ImageUrl"></InputText>
                 </div>
                 <button class="btn btn-success" @onclick="@CreateNewUser">Create</button>
+                <button class="btn btn-outline-warning" @onclick="@CancelCreateNewUser">Cancel</button>
             </div>
         </EditForm>
     </div>
@@ -70,9 +71,8 @@
     </div>
 </div>
 
-
+ 
 @code {
-    List<CookbookModel> CRUDUsers = new List<CookbookModel>();
     CookbookModelPOST cookbookModel = new CookbookModelPOST();
     bool ShowCreateUserForm = true, ShowNewButton = false;
     private void ShowHideCreateUserForm()
@@ -91,18 +91,17 @@
             var content = await response.Content.ReadAsStringAsync();
             CookbookModel user = JsonConvert.DeserializeObject<CookbookModel>(await response.Content.ReadAsStringAsync());
             if (user != null)
-            {
-                user.Name = cookbookModel.Name;
-                user.Description = cookbookModel.Description;
-                CRUDUsers.Add(user);
                 cookbookModel = new CookbookModelPOST();
-            }
         }
         ShowCreateUserForm = !ShowCreateUserForm;
         ShowNewButton = !ShowNewButton;
+        await OnInitializedAsync();
     }
-
-
+    private void CancelCreateNewUser()
+    {
+        ShowCreateUserForm = !ShowCreateUserForm;
+        ShowNewButton = !ShowNewButton;
+    }
 
     protected override async Task OnInitializedAsync()
     {
