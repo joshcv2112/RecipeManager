@@ -4,30 +4,32 @@
 
 @using Newtonsoft.Json
 @using Data
+@using System.Text
 
 <h1>Cookbook Library</h1>
 
 <div class="container-fluid">
     <button class="btn btn-success" hidden="@ShowNewButton" @onclick="ShowHideCreateUserForm">Add New</button>
     <div class="row" hidden="@ShowCreateUserForm" style="border:3px solid black;margin:20px;">
-        <EditForm Model="@crudUser">
+        <EditForm Model="@cookbookModel">
             <div class="row form-inline" style="margin:20px;">
                 <div class="form-group" style="margin:15px;">
                     <label for="Name" style="margin:10px;">Name</label>
-                    <InputText Id="Name" @bind-Value="@crudUser.Name"></InputText>
+                    <InputText Id="Name" @bind-Value="@cookbookModel.Name"></InputText>
                 </div>
                 <div class="form-group" style="margin:15px;">
                     <label for="Description" style="margin:10px;">Description</label>
-                    <InputText Id="Description" @bind-Value="@crudUser.Name"></InputText>
+                    <InputText Id="Description" @bind-Value="@cookbookModel.Description"></InputText>
                 </div>
                 <div class="form-group" style="margin:15px;">
                     <label for="ImageUrl" style="margin:10px;">Image URL</label>
-                    <InputText Id="ImageUrl" @bind-Value="@crudUser.Name"></InputText>
+                    <InputText Id="ImageUrl" @bind-Value="@cookbookModel.ImageUrl"></InputText>
                 </div>
                 <button class="btn btn-success" @onclick="@CreateNewUser">Create</button>
             </div>
         </EditForm>
     </div>
+
     <div>
         @if (Cookbooks != null)
         {
@@ -70,8 +72,8 @@
 
 
 @code {
-    List<CRUDUser> CRUDUsers = new List<CRUDUser>();
-    CRUDUser crudUser = new CRUDUser();
+    List<CookbookModel> CRUDUsers = new List<CookbookModel>();
+    CookbookModelPOST cookbookModel = new CookbookModelPOST();
     bool ShowCreateUserForm = true, ShowNewButton = false;
     private void ShowHideCreateUserForm()
     {
@@ -80,22 +82,22 @@
     }
     private async Task CreateNewUser()
     {
-        // DEMO CODE -- Modify this to post to my API
-        //string apiName = "api/users";
-        //var postData = JsonConvert.SerializeObject(crudUser);
-        //var response = await client.PostAsync(apiName, new StringContent(postData));
-        //if (response.IsSuccessStatusCode)
-        //{
-        //    var content = await response.Content.ReadAsStringAsync();
-        //    CRUDUser user = JsonConvert.DeserializeObject<CRUDUser>(await response.Content.ReadAsStringAsync());
-        //    if (user != null)
-        //    {
-        //        user.Name = crudUser.Name;
-        //        user.Job = crudUser.Job;
-        //        CRUDUsers.Add(user);
-        //        crudUser = new CRUDUser();
-        //    }
-        //}
+        string apiName = "api/cookbooks";
+        var postData = new StringContent(JsonConvert.SerializeObject(cookbookModel), Encoding.UTF8, "application/json");
+        var response = await client.PostAsync(apiName, postData);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            CookbookModel user = JsonConvert.DeserializeObject<CookbookModel>(await response.Content.ReadAsStringAsync());
+            if (user != null)
+            {
+                user.Name = cookbookModel.Name;
+                user.Description = cookbookModel.Description;
+                CRUDUsers.Add(user);
+                cookbookModel = new CookbookModelPOST();
+            }
+        }
         ShowCreateUserForm = !ShowCreateUserForm;
         ShowNewButton = !ShowNewButton;
     }
