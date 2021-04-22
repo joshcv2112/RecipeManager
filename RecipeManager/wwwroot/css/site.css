@@ -62,8 +62,3 @@ a, .btn-link {
     margin: 4px 2px;
     cursor: pointer;
 }
-
-.cookbook-thumbnail {
-    max-height: 300px;
-    align-content: center;
-}

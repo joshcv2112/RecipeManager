@@ -1,0 +1,121 @@
+﻿@page "/library"
+
+@inject HttpClient client
+
+@using Newtonsoft.Json
+@using Data
+@using System.Text
+
+<h1>Cookbook Library</h1>
+
+<div class="container-fluid">
+    <button class="btn btn-success" hidden="@ShowNewButton" @onclick="ShowHideCreateUserForm">Add New</button>
+    <div class="row" hidden="@ShowCreateUserForm" style="border:3px solid black;margin:20px;">
+        <EditForm Model="@cookbookModel">
+            <div class="row form-inline" style="margin:20px;">
+                <div class="form-group" style="margin:15px;">
+                    <label for="Name" style="margin:10px;">Name</label>
+                    <InputText Id="Name" @bind-Value="@cookbookModel.Name"></InputText>
+                </div>
+                <div class="form-group" style="margin:15px;">
+                    <label for="Description" style="margin:10px;">Description</label>
+                    <InputText Id="Description" @bind-Value="@cookbookModel.Description"></InputText>
+                </div>
+                <div class="form-group" style="margin:15px;">
+                    <label for="ImageUrl" style="margin:10px;">Image URL</label>
+                    <InputText Id="ImageUrl" @bind-Value="@cookbookModel.ImageUrl"></InputText>
+                </div>
+                <button class="btn btn-success wowok" @onclick="@CreateNewUser">Create</button>
+                <button class="btn btn-outline-warning wowok" @onclick="@CancelCreateNewUser">Cancel</button>
+            </div>
+        </EditForm>
+    </div>
+
+    <div>
+        @if (Cookbooks != null)
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th><h3 style="margin: 0px">Cookbook</h3></th>
+                        <th><h3 style="margin: 0px">Created By</h3></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Cookbooks)
+                    {
+                        <tr class="justify-content-center">
+                            <td><img src="@user.ImageUrl" class="cookbook-thumbnail" /></td>
+                            <td style="vertical-align: middle"><h3>@user.Name</h3><br />@user.Description</td>
+                            <td style="vertical-align: middle">@user.UserId</td>
+                            <td style="vertical-align: middle">
+                                <a href="">Edit</a> |
+                                <a href="">Copy</a> |
+                                <a href="">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        @if (!Cookbooks.Any())
+        {
+            <div class="justify-content-center">
+                <h5>No records to show</h5>
+            </div>
+        }
+    </div>
+</div>
+
+ 
+@code {
+    CookbookModelPOST cookbookModel = new CookbookModelPOST();
+    bool ShowCreateUserForm = true, ShowNewButton = false;
+    private void ShowHideCreateUserForm()
+    {
+        ShowCreateUserForm = !ShowCreateUserForm;
+        ShowNewButton = !ShowNewButton;
+    }
+    private async Task CreateNewUser()
+    {
+        string apiName = "api/cookbooks";
+        var postData = new StringContent(JsonConvert.SerializeObject(cookbookModel), Encoding.UTF8, "application/json");
+        var response = await client.PostAsync(apiName, postData);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            CookbookModel user = JsonConvert.DeserializeObject<CookbookModel>(await response.Content.ReadAsStringAsync());
+            if (user != null)
+                cookbookModel = new CookbookModelPOST();
+        }
+        ShowCreateUserForm = !ShowCreateUserForm;
+        ShowNewButton = !ShowNewButton;
+        await OnInitializedAsync();
+    }
+    private void CancelCreateNewUser()
+    {
+        ShowCreateUserForm = !ShowCreateUserForm;
+        ShowNewButton = !ShowNewButton;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetUser();
+    }
+
+    List<CookbookModel> Cookbooks = new List<CookbookModel>();
+    private async Task GetUser()
+    {
+        var apiName = "api/Cookbooks";
+        var httpResponse = await client.GetAsync(apiName);
+        if (httpResponse.IsSuccessStatusCode)
+        {
+            List<CookbookModel> responseData = JsonConvert.DeserializeObject<List<CookbookModel>>(await httpResponse.Content.ReadAsStringAsync());
+            Cookbooks = responseData;
+            StateHasChanged();
+        }
+    }
+}
