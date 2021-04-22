@@ -9,8 +9,9 @@
 <h1>Cookbook Library</h1>
 
 <div class="container-fluid">
-    <button class="btn btn-success" hidden="@ShowNewButton" @onclick="ShowHideCreateUserForm">Add New</button>
-    <div class="row" hidden="@ShowCreateUserForm" style="border:3px solid black;margin:20px;">
+    @* Create new Cookbook form *@
+    <button class="btn btn-success" hidden="@HideNewButton" @onclick="ShowHideCreateUserForm">Add New</button>
+    <div class="row" hidden="@HideCreateUserForm" style="border:1px solid black;margin:20px;">
         <EditForm Model="@cookbookModel">
             <div class="row form-inline" style="margin:20px;">
                 <div class="form-group" style="margin:15px;">
@@ -26,7 +27,24 @@
                     <InputText Id="ImageUrl" @bind-Value="@cookbookModel.ImageUrl"></InputText>
                 </div>
                 <button class="btn btn-success wowok" @onclick="@CreateNewUser">Create</button>
-                <button class="btn btn-outline-warning wowok" @onclick="@CancelCreateNewUser">Cancel</button>
+                <button class="btn btn-outline-warning wowok" @onclick="@ShowHideCreateUserForm">Cancel</button>
+            </div>
+        </EditForm>
+    </div>
+
+    @* Delete Cookbook form *@
+    <div class="row" hidden="@HideDeleteCookbookForm" style="border:1px solid red;margin:20px;">
+        <EditForm Model="@cookbookModel">
+            <div class="row form-inline" style="margin:20px;">
+                <div class="form-group" style="margin:15px;">
+                    <h4 style="margin:10px;">Are you absolutely sure you want to delete this cookbook? The cookbook and all related recipes will be deleted.</h4>
+                </div>
+                <div class="form-group" style="margin:15px;">
+                    <label for="ImageUrl" style="margin:10px;">Please enter <b>&nbsp;@SelectedCookbook&nbsp;</b> to confirm.</label>
+                    <InputText Id="ImageUrl" @bind-Value="@cookbookModel.ImageUrl"></InputText>
+                </div>
+                <button class="btn btn-danger wowok">Delete Cookbook</button>
+                <button class="btn btn-outline-warning wowok" @onclick="@(HideDeleteCookbookDialog)">Cancel</button>
             </div>
         </EditForm>
     </div>
@@ -51,9 +69,9 @@
                             <td style="vertical-align: middle"><h3>@user.Name</h3><br />@user.Description</td>
                             <td style="vertical-align: middle">@user.UserId</td>
                             <td style="vertical-align: middle">
-                                <a href="">Edit</a> |
-                                <a href="">Copy</a> |
-                                <a href="">Delete</a>
+                                <button class="btn btn-outline-primary btn-sm">Edit</button>
+                                <button class="btn btn-outline-secondary btn-sm">Copy</button>
+                                <button class="btn btn-outline-danger btn-sm" @onclick="@(() => ShowHideDeleteCookbookDialog(user.Name))">Delete</button>
                             </td>
                         </tr>
                     }
@@ -63,7 +81,7 @@
         @if (!Cookbooks.Any())
         {
             <div class="justify-content-center">
-                <h5>No records to show</h5>
+                <h5>No cookbooks found</h5>
             </div>
         }
     </div>
@@ -71,12 +89,15 @@
 
  
 @code {
+    string SelectedCookbook = "HERE IT IS FAM";
+
     CookbookModelPOST cookbookModel = new CookbookModelPOST();
-    bool ShowCreateUserForm = true, ShowNewButton = false;
+    bool HideCreateUserForm = true, HideDeleteCookbookForm = true;
+    bool HideNewButton = false;
     private void ShowHideCreateUserForm()
     {
-        ShowCreateUserForm = !ShowCreateUserForm;
-        ShowNewButton = !ShowNewButton;
+        HideCreateUserForm = !HideCreateUserForm;
+        HideNewButton = !HideNewButton;
     }
     private async Task CreateNewUser()
     {
@@ -91,14 +112,21 @@
             if (user != null)
                 cookbookModel = new CookbookModelPOST();
         }
-        ShowCreateUserForm = !ShowCreateUserForm;
-        ShowNewButton = !ShowNewButton;
+        HideCreateUserForm = !HideCreateUserForm;
+        HideNewButton = !HideNewButton;
         await OnInitializedAsync();
     }
-    private void CancelCreateNewUser()
+
+    public void ShowHideDeleteCookbookDialog(string i)
     {
-        ShowCreateUserForm = !ShowCreateUserForm;
-        ShowNewButton = !ShowNewButton;
+        SelectedCookbook = i;
+        HideDeleteCookbookForm = !HideDeleteCookbookForm;
+        HideCreateUserForm = true;
+    }
+    public void HideDeleteCookbookDialog()
+    {
+        HideDeleteCookbookForm = !HideDeleteCookbookForm;
+        HideCreateUserForm = true;
     }
 
     protected override async Task OnInitializedAsync()
