@@ -41,9 +41,9 @@
                 </div>
                 <div class="form-group" style="margin:15px;">
                     <label for="ImageUrl" style="margin:10px;">Please enter <b>&nbsp;@SelectedCookbook&nbsp;</b> to confirm.</label>
-                    <InputText Id="ImageUrl" @bind-Value="@cookbookModel.ImageUrl"></InputText>
+                    <InputText Id="ImageUrl" @bind-Value="@cookbookModel.Name"></InputText>
                 </div>
-                <button class="btn btn-danger wowok">Delete Cookbook</button>
+                <button class="btn btn-danger wowok" @onclick="@(() => DeleteCookbookButtonClicked(cookbookModel))">Delete Cookbook</button>
                 <button class="btn btn-outline-warning wowok" @onclick="@(HideDeleteCookbookDialog)">Cancel</button>
             </div>
         </EditForm>
@@ -67,11 +67,11 @@
                         <tr class="justify-content-center">
                             <td><img src="@user.ImageUrl" class="cookbook-thumbnail" /></td>
                             <td style="vertical-align: middle"><h3>@user.Name</h3><br />@user.Description</td>
-                            <td style="vertical-align: middle">@user.UserId</td>
+                            <td style="vertical-align: middle">@user.UserId<br />@user.CookbookId</td>
                             <td style="vertical-align: middle">
                                 <button class="btn btn-outline-primary btn-sm">Edit</button>
                                 <button class="btn btn-outline-secondary btn-sm">Copy</button>
-                                <button class="btn btn-outline-danger btn-sm" @onclick="@(() => ShowHideDeleteCookbookDialog(user.Name))">Delete</button>
+                                <button class="btn btn-outline-danger btn-sm" @onclick="@(() => ShowHideDeleteCookbookDialog(user))">Delete</button>
                             </td>
                         </tr>
                     }
@@ -89,11 +89,14 @@
 
  
 @code {
-    string SelectedCookbook = "HERE IT IS FAM";
+    string SelectedCookbook = "";
 
     CookbookModelPOST cookbookModel = new CookbookModelPOST();
     bool HideCreateUserForm = true, HideDeleteCookbookForm = true;
     bool HideNewButton = false;
+
+    Guid ToBeDeleted = new Guid();
+
     private void ShowHideCreateUserForm()
     {
         HideCreateUserForm = !HideCreateUserForm;
@@ -117,16 +120,46 @@
         await OnInitializedAsync();
     }
 
-    public void ShowHideDeleteCookbookDialog(string i)
+    public void ShowHideDeleteCookbookDialog(CookbookModel cookbook)
     {
-        SelectedCookbook = i;
+        ToBeDeleted = cookbook.CookbookId;
+        SelectedCookbook = cookbook.Name;
         HideDeleteCookbookForm = !HideDeleteCookbookForm;
         HideCreateUserForm = true;
+        HideNewButton = !HideNewButton;
     }
     public void HideDeleteCookbookDialog()
     {
-        HideDeleteCookbookForm = !HideDeleteCookbookForm;
+        HideDeleteCookbookForm = true;
         HideCreateUserForm = true;
+        HideNewButton = false;
+        cookbookModel = new CookbookModelPOST();
+    }
+    public async void DeleteCookbookButtonClicked(CookbookModelPOST cookbook)
+    {
+        HideDeleteCookbookForm = true;
+        HideNewButton = false;
+        if (cookbook.Name == SelectedCookbook)
+        {
+            Console.WriteLine("YEET");
+            await DeleteCookbook(ToBeDeleted);
+        }
+        else
+        {
+            // TODO: Throw an error in the UI here.
+            Console.WriteLine("FAIL");
+        }
+    }
+    private async Task DeleteCookbook(Guid cookbookId)
+    {
+        string apiName = string.Format($"api/Cookbooks/{cookbookId}");
+        var response = await client.DeleteAsync(apiName);
+        if (response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Successfully Deleted: " + cookbookId);
+            await OnInitializedAsync();
+        }
+        HideDeleteCookbookDialog();
     }
 
     protected override async Task OnInitializedAsync()
