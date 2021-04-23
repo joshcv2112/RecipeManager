@@ -40,7 +40,7 @@
                     <h4 style="margin:10px;">Are you absolutely sure you want to delete this cookbook? The cookbook and all related recipes will be deleted.</h4>
                 </div>
                 <div class="form-group" style="margin:15px;">
-                    <label for="ImageUrl" style="margin:10px;">Please enter <b>&nbsp;@SelectedCookbook&nbsp;</b> to confirm.</label>
+                    <label for="ImageUrl" style="margin:10px;">Please enter <b>&nbsp;@TargetedCookbook&nbsp;</b> to confirm.</label>
                     <InputText Id="ImageUrl" @bind-Value="@cookbookModel.Name"></InputText>
                 </div>
                 <button class="btn btn-danger wowok" @onclick="@(() => DeleteCookbookButtonClicked(cookbookModel))">Delete Cookbook</button>
@@ -89,13 +89,32 @@
 
  
 @code {
-    string SelectedCookbook = "";
+    protected override async Task OnInitializedAsync()
+    {
+        await GetCookbooksForCurrentUser();
+    }
 
-    CookbookModelPOST cookbookModel = new CookbookModelPOST();
+    List<CookbookModel> Cookbooks = new List<CookbookModel>();
+    private async Task GetCookbooksForCurrentUser()
+    {
+        var apiName = "api/Cookbooks";
+        var httpResponse = await client.GetAsync(apiName);
+        if (httpResponse.IsSuccessStatusCode)
+        {
+            List<CookbookModel> responseData = JsonConvert.DeserializeObject<List<CookbookModel>>(await httpResponse.Content.ReadAsStringAsync());
+            Cookbooks = responseData;
+            StateHasChanged();
+        }
+    }
+
+
+
+
+
+
+    CreateCookbookModel cookbookModel = new CreateCookbookModel();
     bool HideCreateUserForm = true, HideDeleteCookbookForm = true;
     bool HideNewButton = false;
-
-    Guid ToBeDeleted = new Guid();
 
     private void ShowHideCreateUserForm()
     {
@@ -113,17 +132,21 @@
             var content = await response.Content.ReadAsStringAsync();
             CookbookModel user = JsonConvert.DeserializeObject<CookbookModel>(await response.Content.ReadAsStringAsync());
             if (user != null)
-                cookbookModel = new CookbookModelPOST();
+                cookbookModel = new CreateCookbookModel();
         }
         HideCreateUserForm = !HideCreateUserForm;
         HideNewButton = !HideNewButton;
         await OnInitializedAsync();
     }
 
+
+
+    string TargetedCookbook = "";
+    Guid CookbookIdToBeDeleted = new Guid();
     public void ShowHideDeleteCookbookDialog(CookbookModel cookbook)
     {
-        ToBeDeleted = cookbook.CookbookId;
-        SelectedCookbook = cookbook.Name;
+        CookbookIdToBeDeleted = cookbook.CookbookId;
+        TargetedCookbook = cookbook.Name;
         HideDeleteCookbookForm = !HideDeleteCookbookForm;
         HideCreateUserForm = true;
         HideNewButton = !HideNewButton;
@@ -133,20 +156,20 @@
         HideDeleteCookbookForm = true;
         HideCreateUserForm = true;
         HideNewButton = false;
-        cookbookModel = new CookbookModelPOST();
+        cookbookModel = new CreateCookbookModel();
     }
-    public async void DeleteCookbookButtonClicked(CookbookModelPOST cookbook)
+    public async void DeleteCookbookButtonClicked(CreateCookbookModel cookbook)
     {
         HideDeleteCookbookForm = true;
         HideNewButton = false;
-        if (cookbook.Name == SelectedCookbook)
+        if (cookbook.Name == TargetedCookbook)
         {
+            // TODO: improve logging here...
             Console.WriteLine("YEET");
-            await DeleteCookbook(ToBeDeleted);
+            await DeleteCookbook(CookbookIdToBeDeleted);
         }
         else
         {
-            // TODO: Throw an error in the UI here.
             Console.WriteLine("FAIL");
         }
     }
@@ -160,23 +183,5 @@
             await OnInitializedAsync();
         }
         HideDeleteCookbookDialog();
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await GetUser();
-    }
-
-    List<CookbookModel> Cookbooks = new List<CookbookModel>();
-    private async Task GetUser()
-    {
-        var apiName = "api/Cookbooks";
-        var httpResponse = await client.GetAsync(apiName);
-        if (httpResponse.IsSuccessStatusCode)
-        {
-            List<CookbookModel> responseData = JsonConvert.DeserializeObject<List<CookbookModel>>(await httpResponse.Content.ReadAsStringAsync());
-            Cookbooks = responseData;
-            StateHasChanged();
-        }
     }
 }
