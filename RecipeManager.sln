@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeManager", "RecipeMana
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeApi", "RecipeApi\RecipeApi.csproj", "{DFB59BF5-8333-4223-B607-66DA3DF69D46}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeManager.UITests", "RecipeManager.UITests\RecipeManager.UITests.csproj", "{86C8C938-0F43-4896-BD31-ACD14D97C83B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{DFB59BF5-8333-4223-B607-66DA3DF69D46}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DFB59BF5-8333-4223-B607-66DA3DF69D46}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DFB59BF5-8333-4223-B607-66DA3DF69D46}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86C8C938-0F43-4896-BD31-ACD14D97C83B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86C8C938-0F43-4896-BD31-ACD14D97C83B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86C8C938-0F43-4896-BD31-ACD14D97C83B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86C8C938-0F43-4896-BD31-ACD14D97C83B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
