@@ -10,7 +10,7 @@
 
 <div class="container-fluid">
     @* Create new Cookbook form *@
-    <button class="btn btn-success" hidden="@HideNewButton" @onclick="ShowHideCreateUserForm">Add New</button>
+    <button class="btn btn-success" hidden="@HideNewButton" @onclick="AddNewButtonClicked">Add New</button>
     <div class="row" hidden="@HideCreateUserForm" style="border:1px solid black;margin:20px;">
         <EditForm Model="@createCookbookModel">
             <div class="row form-inline" style="margin:20px;">
@@ -27,7 +27,7 @@
                     <InputText Id="ImageUrl" @bind-Value="@createCookbookModel.ImageUrl"></InputText>
                 </div>
                 <button class="btn btn-success wowok" @onclick="@CreateNewUser">Create</button>
-                <button class="btn btn-outline-warning wowok" @onclick="@ShowHideCreateUserForm">Cancel</button>
+                <button class="btn btn-outline-warning wowok" @onclick="@RestoreInitialState">Cancel</button>
             </div>
         </EditForm>
     </div>
@@ -89,6 +89,33 @@
 
  
 @code {
+    #region StateManagement
+    bool HideNewButton = false;
+    bool HideCreateUserForm = true;
+    bool HideDeleteCookbookForm = true;
+
+    private void RestoreInitialState()
+    {
+        HideNewButton = false;
+        HideCreateUserForm = true;
+        HideDeleteCookbookForm = true;
+    }
+
+    private void AddNewButtonClicked()
+    {
+        HideNewButton = true;
+        HideCreateUserForm = false;
+        HideDeleteCookbookForm = true;
+    }
+
+    private void DeleteCookbookButtonClicked()
+    {
+        HideNewButton = true;
+        HideCreateUserForm = true;
+        HideDeleteCookbookForm = false;
+    }
+    #endregion
+
     #region OnPageLoad
     protected override async Task OnInitializedAsync()
     {
@@ -110,13 +137,6 @@
 
     #region CreateCookbook
     CreateCookbookModel createCookbookModel = new CreateCookbookModel();
-    bool HideCreateUserForm = true, HideDeleteCookbookForm = true;
-    bool HideNewButton = false;
-    private void ShowHideCreateUserForm()
-    {
-        HideCreateUserForm = !HideCreateUserForm;
-        HideNewButton = !HideNewButton;
-    }
     private async Task CreateNewUser()
     {
         string apiName = "api/cookbooks";
@@ -130,8 +150,7 @@
             if (user != null)
                 createCookbookModel = new CreateCookbookModel();
         }
-        HideCreateUserForm = !HideCreateUserForm;
-        HideNewButton = !HideNewButton;
+        RestoreInitialState();
         await OnInitializedAsync();
     }
     #endregion
@@ -144,23 +163,18 @@
     {
         CookbookIdToBeDeleted = cookbook.CookbookId;
         TargetedCookbook = cookbook.Name;
-        HideDeleteCookbookForm = !HideDeleteCookbookForm;
-        HideCreateUserForm = true;
-        HideNewButton = !HideNewButton;
+        DeleteCookbookButtonClicked();
     }
     public void HideDeleteCookbookDialog()
     {
-        HideDeleteCookbookForm = true;
-        HideCreateUserForm = true;
-        HideNewButton = false;
+        RestoreInitialState();
         deleteCookbookModel = new DeleteCookbookModel();
     }
     public async void DeleteCookbookButtonClicked(DeleteCookbookModel cookbook)
     {
         if (cookbook.Name == TargetedCookbook)
         {
-            HideDeleteCookbookForm = true;
-            HideNewButton = false;
+            RestoreInitialState();
             cookbook.CookbookId = CookbookIdToBeDeleted;
             await DeleteCookbook(cookbook);
             return;
