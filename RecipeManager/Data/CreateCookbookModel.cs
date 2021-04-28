@@ -3,7 +3,7 @@ using System;
 
 namespace RecipeManager.Data
 {
-    public class CookbookModelPOST
+    public class CreateCookbookModel
     {
         [JsonProperty("name")]
         public string Name { get; set; }
