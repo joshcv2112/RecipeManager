@@ -17,10 +17,9 @@ namespace RecipeManager.Pages
         private bool HideCreateUserForm = true;
         private bool HideDeleteCookbookForm = true;
         private List<CookbookDto> Cookbooks = new List<CookbookDto>();
-        private CreateCookbookModel createCookbookModel = new CreateCookbookModel();
+        private CookbookDto cookbookDto = new CookbookDto();
         private string TargetedCookbook = "";
         private Guid CookbookIdToBeDeleted = new Guid();
-        private DeleteCookbookModel deleteCookbookModel = new DeleteCookbookModel();
 
         #region StateManagement
         private void RestoreInitialState()
@@ -68,7 +67,7 @@ namespace RecipeManager.Pages
         private async Task CreateNewUser()
         {
             string apiName = "api/cookbooks";
-            var postData = new StringContent(JsonConvert.SerializeObject(createCookbookModel), Encoding.UTF8, "application/json");
+            var postData = new StringContent(JsonConvert.SerializeObject(cookbookDto), Encoding.UTF8, "application/json");
             var response = await Http.PostAsync(apiName, postData);
 
             if (response.IsSuccessStatusCode)
@@ -76,7 +75,7 @@ namespace RecipeManager.Pages
                 var content = await response.Content.ReadAsStringAsync();
                 CookbookDto user = JsonConvert.DeserializeObject<CookbookDto>(await response.Content.ReadAsStringAsync());
                 if (user != null)
-                    createCookbookModel = new CreateCookbookModel();
+                    cookbookDto = new CookbookDto();
             }
             RestoreInitialState();
             await OnInitializedAsync();
@@ -94,10 +93,10 @@ namespace RecipeManager.Pages
         public void HideDeleteCookbookDialog()
         {
             RestoreInitialState();
-            deleteCookbookModel = new DeleteCookbookModel();
+            cookbookDto = new CookbookDto();
         }
 
-        public async void DeleteCookbookButtonClicked(DeleteCookbookModel cookbook)
+        public async void DeleteCookbookButtonClicked(CookbookDto cookbook)
         {
             if (cookbook.Name == TargetedCookbook)
             {
@@ -108,7 +107,7 @@ namespace RecipeManager.Pages
             }
         }
 
-        private async Task DeleteCookbook(DeleteCookbookModel cookbook)
+        private async Task DeleteCookbook(CookbookDto cookbook)
         {
             string apiName = string.Format($"api/Cookbooks/{cookbook.CookbookId}");
             var response = await Http.DeleteAsync(apiName);
