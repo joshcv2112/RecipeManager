@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-// TEMPORARY FILE JUST FOR EXAMPLE, DELETE LATER
-
 namespace RecipeManager.Data
 {
     public class JobApplication

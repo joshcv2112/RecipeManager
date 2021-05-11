@@ -3,7 +3,7 @@ using System;
 
 namespace RecipeManager.Data
 {
-    public class CookbookModel
+    public class CookbookDto
     {
         [JsonProperty("cookbookId")]
         public Guid CookbookId { get; set; }
