@@ -7,6 +7,8 @@ namespace RecipeManager.UITests
 {
     public class UnitTest1
     {
+        // I could also look into using bunit to test my UI. Maybe look a video up or something.
+
         // Example test from video: https://www.youtube.com/watch?v=V4CE_mNpmXU
         // TODO: Finish that video and get a test up and running for this project.
         //[Fact]

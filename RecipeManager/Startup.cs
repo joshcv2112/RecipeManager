@@ -35,11 +35,6 @@ namespace RecipeManager
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddDatabaseDeveloperPageExceptionFilter();
-            services.AddSingleton<WeatherForecastService>();
-            //services.AddScoped<HttpClient>(s =>
-            //{
-            //    return new HttpClient { BaseAddress = new Uri(@"https://reqres.in/") };
-            //});
             services.AddScoped<HttpClient>(s =>
             {
                 return new HttpClient { BaseAddress = new Uri(@"https://localhost:5011") };
