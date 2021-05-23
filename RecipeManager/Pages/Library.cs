@@ -15,10 +15,12 @@ namespace RecipeManager.Pages
         private HttpClient Http { get; set; }
         private bool HideNewButton = false;
         private bool HideCreateUserForm = true;
+        private bool HideEditCookbookForm = true;
         private bool HideDeleteCookbookForm = true;
         private List<CookbookDto> Cookbooks = new List<CookbookDto>();
         private CookbookDto cookbookDto = new CookbookDto();
         private string TargetedCookbook = "";
+        private Guid CookbookIdToBeEdited = new Guid();
         private Guid CookbookIdToBeDeleted = new Guid();
 
         #region StateManagement
@@ -26,6 +28,7 @@ namespace RecipeManager.Pages
         {
             HideNewButton = false;
             HideCreateUserForm = true;
+            HideEditCookbookForm = true;
             HideDeleteCookbookForm = true;
         }
 
@@ -36,10 +39,19 @@ namespace RecipeManager.Pages
             HideDeleteCookbookForm = true;
         }
 
+        private void EditCookbookButtonClicked()
+        {
+            HideNewButton = true;
+            HideCreateUserForm = true;
+            HideEditCookbookForm = false;
+            HideDeleteCookbookForm = true;
+        }
+
         private void DeleteCookbookButtonClicked()
         {
             HideNewButton = true;
             HideCreateUserForm = true;
+            HideEditCookbookForm = true;
             HideDeleteCookbookForm = false;
         }
         #endregion
@@ -82,11 +94,27 @@ namespace RecipeManager.Pages
         }
         #endregion
 
+        #region EditCookbook
+        public void ShowEditCookbookForm(CookbookDto cookbook)
+        {
+            //CookbookIdToBeEdited = cookbook.CookbookId;
+            cookbookDto = cookbook;
+            EditCookbookButtonClicked();
+        }
+
+        public void HideEditCookbookDialog()
+        {
+            RestoreInitialState();
+            cookbookDto = new CookbookDto();
+        }
+        #endregion
+
         #region DeleteCookbook
         public void ShowHideDeleteCookbookDialog(CookbookDto cookbook)
         {
+            cookbookDto = cookbook;
             CookbookIdToBeDeleted = cookbook.CookbookId;
-            TargetedCookbook = cookbook.Name;
+            TargetedCookbook = "";
             DeleteCookbookButtonClicked();
         }
 
