@@ -17,9 +17,9 @@ namespace RecipeManager.UI.Areas.Identity
             builder.ConfigureServices((context, services) => {
                 services.AddDbContext<RecipeManagerUIContext>(options =>
                     options.UseSqlServer(
-                        context.Configuration.GetConnectionString("RecipeManagerUIContextConnection")));
+                        context.Configuration.GetSection("RecipeManagerUI-Connection").Value));
 
-                services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                    services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<RecipeManagerUIContext>();
             });
         }
