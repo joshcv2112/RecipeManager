@@ -14,6 +14,7 @@ using RecipeManager.UI.Data;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace RecipeManager.UI
@@ -39,6 +40,10 @@ namespace RecipeManager.UI
             services.AddServerSideBlazor();
             services.AddScoped<AuthenticationStateProvider, RevalidatingIdentityAuthenticationStateProvider<IdentityUser>>();
             services.AddSingleton<WeatherForecastService>();
+            services.AddScoped<HttpClient>(s =>
+            {
+                return new HttpClient { BaseAddress = new Uri(@"https://localhost:5011") };
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

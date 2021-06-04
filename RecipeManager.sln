@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeApi", "RecipeApi\Reci
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeManager.UITests", "RecipeManager.UITests\RecipeManager.UITests.csproj", "{86C8C938-0F43-4896-BD31-ACD14D97C83B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecipeManager.UI", "RecipeManager.UI\RecipeManager.UI.csproj", "{2207AC4F-7354-4119-9D69-BC8803E1C527}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RecipeManager.UI", "RecipeManager.UI\RecipeManager.UI.csproj", "{2207AC4F-7354-4119-9D69-BC8803E1C527}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
