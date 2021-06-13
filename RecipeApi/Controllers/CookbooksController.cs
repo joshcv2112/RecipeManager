@@ -74,7 +74,7 @@ namespace RecipeApi.Controllers
 
             await _repository.DeleteAsync<Cookbook>(model);
 
-            return model;
+            return NoContent();
         }
     }
 }
