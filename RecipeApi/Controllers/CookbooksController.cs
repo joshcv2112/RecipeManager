@@ -24,17 +24,26 @@ namespace RecipeApi.Controllers
             return model;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Cookbook>> GetCookbook(Guid id)
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<IEnumerable<Cookbook>>> GetCookbook(Guid userId)
         {
-            var model = await _repository.SelectById<Cookbook>(id);
+            var model = await _repository.SelectAll<Cookbook>();
 
             if (model == null)
             {
                 return NotFound();
             }
 
-            return model;
+            var cookbooks = new List<Cookbook>();
+            foreach (var cookbook in model)
+            {
+                if (cookbook.UserId == userId)
+                {
+                    cookbooks.Add(cookbook);
+                }
+            }
+
+            return cookbooks;
         }
 
         [HttpPut("{cookbookId}")]
