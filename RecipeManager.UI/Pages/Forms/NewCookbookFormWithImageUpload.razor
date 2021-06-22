@@ -42,6 +42,18 @@
     {
         string apiName = "https://localhost:5011/api/cookbooks";
         cookbookDto.UserId = GetUserId();
+
+        if (x != null)
+        {
+            var url = await SaveFile(x.File);
+            urls.Clear();
+            urls.Add(url);
+        }
+        else
+        {
+            Console.WriteLine("Image is null, you should upload one.");
+        }
+
         var postData = new StringContent(JsonConvert.SerializeObject(cookbookDto), Encoding.UTF8, "application/json");
         var response = await Http.PostAsync(apiName, postData);
 
@@ -54,6 +66,7 @@
                 cookbookDto = new CookbookDto();
             }
         }
+
         await OnInitializedAsync();
     }
 
@@ -70,6 +83,8 @@
     string dropClass = string.Empty;
     const int maxFileSize = 10485760;
 
+    InputFileChangeEventArgs x;
+
     async Task OnInputFileChange(InputFileChangeEventArgs e)
     {
         dropClass = string.Empty;
@@ -82,10 +97,10 @@
             else
             {
                 files = null;
-
-                var url = await SaveFile(e.File);
-                urls.Clear();
-                urls.Add(url);
+                x = e;
+                //var url = await SaveFile(e.File);
+                //urls.Clear();
+                //urls.Add(url);
             }
         }
         catch (Exception ex)
