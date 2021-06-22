@@ -39,6 +39,8 @@ namespace RecipeManager.UI.Pages
 
         private void DeleteCookbookButtonClicked()
         {
+            // TODO: When something is deleted it should also delete the image from blob storage.
+
             HideNewButton = true;
             HideCreateUserForm = true;
             HideDeleteCookbookForm = false;
