@@ -14,7 +14,8 @@
 @using System;
 @using System.Threading.Tasks;
 
-<div class="row" style="border:1px solid black;margin:20px;">
+<button class="btn btn-success" hidden="@HideNewButton" @onclick="AddNewButtonClicked" style="margin-bottom: 15px;">Add New</button>
+<div class="row" hidden="@HideCreateCookbookForm" style="border:1px solid black;margin:20px;">
     <EditForm Model="@cookbookDto">
         <div class="row form-inline" style="margin:20px;">
             <div class="form-group" style="margin:15px;">
@@ -26,8 +27,8 @@
                 <InputText Id="Description" @bind-Value="@cookbookDto.Description"></InputText>
             </div>
             <InputFile id="inputDefault" OnChange="OnInputFileChange" accept="image/png,image/gif,image/jpeg" style="margin-left: 30px;"/>
-            <button class="btn btn-success" style="margin: 10px; margin-bottom: 15px;" @onclick="@CreateNewUser">Create</button>
-            <button class="btn btn-outline-warning" style="margin: 10px; margin-bottom: 15px;">Cancel</button>
+            <button class="btn btn-success" style="margin: 10px; margin-bottom: 15px;" @onclick="@CreateNewCookbook">Create</button>
+            <button class="btn btn-outline-warning" style="margin: 10px; margin-bottom: 15px;" @onclick="@HideNewCookbookForm">Cancel</button>
         </div>
     </EditForm>
 </div>
@@ -37,7 +38,24 @@
     private HttpClient Http = new HttpClient();
     private string UserId;
 
-    private async Task CreateNewUser()
+    private bool HideNewButton = false;
+    private bool HideCreateCookbookForm = true;
+
+    private void AddNewButtonClicked()
+    {
+        HideNewButton = true;
+        HideCreateCookbookForm = false;
+    }
+
+    private void HideNewCookbookForm()
+    {
+        HideNewButton = false;
+        HideCreateCookbookForm = true;
+    }
+
+
+
+    private async Task CreateNewCookbook()
     {
         string apiName = "https://localhost:5011/api/cookbooks";
         cookbookDto.UserId = GetUserId();
@@ -64,7 +82,9 @@
             }
         }
 
-        await OnInitializedAsync();
+        HideNewCookbookForm();
+        //await OnInitializedAsync();
+        this.StateHasChanged();
     }
 
     private Guid GetUserId()

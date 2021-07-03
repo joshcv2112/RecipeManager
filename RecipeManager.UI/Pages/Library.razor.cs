@@ -66,25 +66,6 @@ namespace RecipeManager.UI.Pages
         }
         #endregion
 
-        #region CreateCookbook
-        private async Task CreateNewUser()
-        {
-            string apiName = "api/cookbooks";
-            var postData = new StringContent(JsonConvert.SerializeObject(cookbookDto), Encoding.UTF8, "application/json");
-            var response = await Http.PostAsync(apiName, postData);
-
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                CookbookDto user = JsonConvert.DeserializeObject<CookbookDto>(await response.Content.ReadAsStringAsync());
-                if (user != null)
-                    cookbookDto = new CookbookDto();
-            }
-            RestoreInitialState();
-            await OnInitializedAsync();
-        }
-        #endregion
-
         #region DeleteCookbook
         public void ShowHideDeleteCookbookDialog(CookbookDto cookbook)
         {

@@ -3,32 +3,13 @@
 @using Newtonsoft.Json
 @using Data
 @using System.Text
+@using RecipeManager.UI.Pages.Forms 
 
 <h3>Library</h3>
 
 <div class="container-fluid">
     @* Create new Cookbook form *@
-    <button class="btn btn-success" hidden="@HideNewButton" @onclick="AddNewButtonClicked" style="margin-bottom: 15px;">Add New</button>
-    <div class="row" hidden="@HideCreateUserForm" style="border:1px solid black;margin:20px;">
-        <EditForm Model="@cookbookDto">
-            <div class="row form-inline" style="margin:20px;">
-                <div class="form-group" style="margin:15px;">
-                    <label for="Name" style="margin:10px;">Name</label>
-                    <InputText Id="Name" @bind-Value="@cookbookDto.Name"></InputText>
-                </div>
-                <div class="form-group" style="margin:15px;">
-                    <label for="Description" style="margin:10px;">Description</label>
-                    <InputText Id="Description" @bind-Value="@cookbookDto.Description"></InputText>
-                </div>
-                <div class="form-group" style="margin:15px;">
-                    <label for="ImageUrl" style="margin:10px;">Image URL</label>
-                    <InputText Id="ImageUrl" @bind-Value="@cookbookDto.ImageUrl"></InputText>
-                </div>
-                <button class="btn btn-success" style="margin: 10px; margin-bottom: 15px;" @onclick="@CreateNewUser">Create</button>
-                <button class="btn btn-outline-warning" style="margin: 10px; margin-bottom: 15px;" @onclick="@RestoreInitialState">Cancel</button>
-            </div>
-        </EditForm>
-    </div>
+    <NewCookbookFormWithImageUpload></NewCookbookFormWithImageUpload>
 
     @* Delete Cookbook form *@
     <div class="row" hidden="@HideDeleteCookbookForm" style="border:1px solid red;margin:20px;">
