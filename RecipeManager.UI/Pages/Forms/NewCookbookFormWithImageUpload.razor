@@ -11,7 +11,6 @@
 @inject IWebHostEnvironment _env;
 
 @using Azure.Storage.Blobs;
-@using Azure.Storage.Blobs.Models;
 @using System;
 @using System.Threading.Tasks;
 
@@ -95,10 +94,6 @@
             {
                 files = null;
                 x = e;
-                // This is where the upload to blob actually happened.
-                //var url = await SaveFile(e.File);
-                //urls.Clear();
-                //urls.Add(url);
             }
         }
         catch (Exception ex)
@@ -116,16 +111,14 @@
         {
             using (var mstream = new MemoryStream())
             {
-                Console.WriteLine("START OF THING");
                 await stream.CopyToAsync(mstream);
                 mstream.Position = 0;
+                // Something different should be done about this environment variable
                 string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
                 BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
-
-                // Use user Guid here instead for container name?
-                string containerName = "thonkcontainer" + Guid.NewGuid().ToString();
-                BlobContainerClient containerClient = await blobServiceClient.CreateBlobContainerAsync(containerName, PublicAccessType.Blob);
-                string fileName = "ThonkTime.PNG";
+                string containerName = "cookbook-cover-images";
+                BlobContainerClient containerClient = blobServiceClient.GetBlobContainerClient(containerName);
+                string fileName = "cookbook-" + Guid.NewGuid().ToString() + ".PNG";
                 BlobClient blobClient = containerClient.GetBlobClient(fileName);
                 Console.WriteLine("Uploading to Blob storage as blob:\n\t {0}\n", blobClient.Uri);
                 await blobClient.UploadAsync(mstream);
