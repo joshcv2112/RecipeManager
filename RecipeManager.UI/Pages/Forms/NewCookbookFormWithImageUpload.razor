@@ -46,8 +46,6 @@
         if (x != null)
         {
             var url = await SaveFile(x.File);
-            urls.Clear();
-            urls.Add(url);
         }
         else
         {
@@ -79,7 +77,6 @@
     }
 
     IReadOnlyList<IBrowserFile> files;
-    List<string> urls = new List<string>();
     string dropClass = string.Empty;
     const int maxFileSize = 10485760;
 
@@ -98,6 +95,7 @@
             {
                 files = null;
                 x = e;
+                // This is where the upload to blob actually happened.
                 //var url = await SaveFile(e.File);
                 //urls.Clear();
                 //urls.Add(url);
@@ -110,50 +108,27 @@
         }
     }
 
-    private async Task<string> SaveFile(IBrowserFile file, string guid = null)
+    private async Task<string> SaveFile(IBrowserFile file)
     {
-        if (guid == null)
-        {
-            guid = Guid.NewGuid().ToString();
-        }
-
+        var guid = Guid.NewGuid().ToString();
         var relativePath = Path.Combine("uploads", guid);
-        var dirToSave = Path.Combine(_env.WebRootPath, relativePath);
-        var di = new DirectoryInfo(dirToSave);
-        if (!di.Exists)
-        {
-            di.Create();
-        }
-
-        var filePath = Path.Combine(dirToSave, file.Name);
         using (var stream = file.OpenReadStream(maxFileSize))
         {
             using (var mstream = new MemoryStream())
             {
                 Console.WriteLine("START OF THING");
-
                 await stream.CopyToAsync(mstream);
                 mstream.Position = 0;
-
                 string connectionString = Environment.GetEnvironmentVariable("AZURE_STORAGE_CONNECTION_STRING");
-                Console.WriteLine(connectionString);
-                // Deprecated
-                //var storageAccount = CloudStorageAccount.Parse(connectionString);
-                // use this instead
                 BlobServiceClient blobServiceClient = new BlobServiceClient(connectionString);
+
+                // Use user Guid here instead for container name?
                 string containerName = "thonkcontainer" + Guid.NewGuid().ToString();
-                // containers by default aren't giving anonymous read access to the blobs. I should fix that, or set up one blob in advance.
                 BlobContainerClient containerClient = await blobServiceClient.CreateBlobContainerAsync(containerName, PublicAccessType.Blob);
                 string fileName = "ThonkTime.PNG";
                 BlobClient blobClient = containerClient.GetBlobClient(fileName);
                 Console.WriteLine("Uploading to Blob storage as blob:\n\t {0}\n", blobClient.Uri);
-
                 await blobClient.UploadAsync(mstream);
-
-                Console.WriteLine("DONE");
-                //// instead of this, upload to azure blob storage...
-                //await File.WriteAllBytesAsync(filePath, mstream.ToArray());
-
                 cookbookDto.ImageUrl = blobClient.Uri.ToString();
             }
         }
