@@ -1,11 +1,24 @@
 ﻿@page "/"
-@using RecipeManager.UI.Pages.Forms 
+@using RecipeManager.UI.Pages.Forms
+
+<ChildComponent OnClick="ClickHandler"></ChildComponent>
+
+<p>@message</p>
+
+@code {
+    string message = "Hello from ParentComponent";
+
+    void ClickHandler(string newMessage)
+    {
+        message = newMessage;
+    }
+}
 
 <h3>TODOs</h3>
 <ul>
+    <li>Fix the warnings</li>
     <li>The UI donesn't refresh when a new cookbook is added. Research one of these topics to make that happen: https://chrissainty.com/3-ways-to-communicate-between-components-in-blazor/</li>
     <li>Break out all the nasty image upload blob logic into a new class library, or something</li>
     <li>This will fail if not signed in</li>
     <li>Add a loading wheel after clicking Create button</li>
-    <li>Setup blob container naming convention</li>
 </ul>

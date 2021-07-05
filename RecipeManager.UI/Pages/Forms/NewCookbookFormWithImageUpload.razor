@@ -34,6 +34,7 @@
 </div>
 
 @code {
+    [Parameter] public EventCallback<string> RefreshInterface { get; set; }
     private CookbookDto cookbookDto = new CookbookDto();
     private HttpClient Http = new HttpClient();
     private string UserId;
@@ -52,8 +53,6 @@
         HideNewButton = false;
         HideCreateCookbookForm = true;
     }
-
-
 
     private async Task CreateNewCookbook()
     {
@@ -81,10 +80,8 @@
                 cookbookDto = new CookbookDto();
             }
         }
-
         HideNewCookbookForm();
-        //await OnInitializedAsync();
-        this.StateHasChanged();
+        await RefreshInterface.InvokeAsync();
     }
 
     private Guid GetUserId()
