@@ -3,14 +3,12 @@ using Newtonsoft.Json;
 using RecipeManager.UI.Data;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace RecipeManager.UI.Pages
 {
-    public partial class Library
+    public partial class CookbooksPage
     {
         [Inject]
         private HttpClient Http { get; set; }
@@ -39,8 +37,6 @@ namespace RecipeManager.UI.Pages
 
         private void DeleteCookbookButtonClicked()
         {
-            // TODO: When something is deleted it should also delete the image from blob storage.
-
             HideNewButton = true;
             HideCreateUserForm = true;
             HideDeleteCookbookForm = false;

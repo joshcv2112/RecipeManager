@@ -1,15 +1,14 @@
-﻿@page  "/library"
+﻿@page  "/cookbooks"
 
 @using Newtonsoft.Json
 @using Data
 @using System.Text
 @using RecipeManager.UI.Pages.Forms 
 
-<h3>Library</h3>
+<h3>Cookbooks</h3>
 
 <div class="container-fluid">
-    @* Create new Cookbook form *@
-    <NewCookbookFormWithImageUpload RefreshInterface="GetCookbooksForCurrentUser"></NewCookbookFormWithImageUpload>
+    <NewCookbookForm RefreshInterface="GetCookbooksForCurrentUser"></NewCookbookForm>
 
     @* Delete Cookbook form *@
     <div class="row" hidden="@HideDeleteCookbookForm" style="border:1px solid red;margin:20px;">
