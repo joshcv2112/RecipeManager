@@ -41,17 +41,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var user in Cookbooks)
+                    @foreach (var cookbook in Cookbooks)
                     {
                         <tr class="justify-content-center" style="vertical-align: middle;">
-                            <td><img src="@user.ImageUrl" style="max-height: 200px; max-width: 180px;" class="cookbook-thumbnail" /></td>
-                            <td style="vertical-align: middle"><h3>@user.Name</h3><br />@user.Description</td>
-                            <td style="vertical-align: middle">@user.UserId<br />@user.CookbookId</td>
-                            <td style="vertical-align: middle; padding-left: 30px">@user.CreatedOn.ToShortDateString()</td>
+                            <td><img src="@cookbook.ImageUrl" style="max-height: 200px; max-width: 180px;" class="cookbook-thumbnail" /></td>
+                            <td style="vertical-align: middle"><h3>@cookbook.Name</h3><br />@cookbook.Description</td>
+                            <td style="vertical-align: middle">@cookbook.UserId<br />@cookbook.CookbookId</td>
+                            <td style="vertical-align: middle; padding-left: 30px">@cookbook.CreatedOn.ToShortDateString()</td>
                             <td style="vertical-align: middle">
-                                <button class="btn btn-outline-primary btn-sm" style="margin-bottom: 15px;">Edit</button>
+                                @*TODO: OK, this is a decent start. the form appears when I click the edit cookbook button. I should extract the button
+                                    from this EditCookbookForm component and have the form display in line just below the cookbook record in the table.*@
+                                <EditCookbookForm></EditCookbookForm>
                                 <button class="btn btn-outline-secondary btn-sm" style="margin-bottom: 15px;">Copy</button>
-                                <button class="btn btn-outline-danger btn-sm" style="margin-bottom: 15px;" @onclick="@(() => ShowHideDeleteCookbookDialog(user))">Delete</button>
+                                <button class="btn btn-outline-danger btn-sm" style="margin-bottom: 15px;" @onclick="@(() => ShowHideDeleteCookbookDialog(cookbook))">Delete</button>
                             </td>
                         </tr>
                     }
